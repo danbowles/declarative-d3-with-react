@@ -9,7 +9,7 @@
     "build": "webpack --mode production"
   },
   "keywords": [],
-  "author": "",
+  "author": "Dan Bowles <daniel.bowles@gmail.com",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.0.1",
