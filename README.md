@@ -1,6 +1,14 @@
-# Dan's Webpack React Starter
+# Declarative D3 With React
 
-This project is intended to provide me with a starting point for future React applications.  Specifically, this came about when wanting to build D3 React apps.
+This project was largely inspired by:
+
+https://bl.ocks.org/shimizu/7b198ba0dd29ccbba60c35a8b2d33160
+
+The motivation for this project is to find a way to easily build interactive charts within the React ecosystem.
+
+This project is built off of my starter project found here:
+
+https://github.com/danbowles/dans-webpack-react-starter
 
 ## Quick Start
 To get started, install dependencies and start the dev server
@@ -10,10 +18,8 @@ npm start
 ```
 This will open a new browser window automatically.
 
-## What's Included
-* React
-* Webpack 4
-* PostCSS 7
-* Babel 7
-* ESLint
-* Styled Components
+## Publishing
+To publish to a `gh-pages` branch, run:
+```
+npm run publish
+```
