@@ -5,8 +5,9 @@ import Layout from '../styles/components/common';
 import { media } from '../config/breakpoints';
 
 const Header = ({ title }) => {
-  const HeaderContainer = styled.div`
+  const HeaderContainer = styled.header`
     background: var(--gradient-header);
+    height: auto;
     padding: 1.5em 1em;
 
     ${media.smMax} {
