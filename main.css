@@ -1,0 +1,30 @@
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400);
+
+/* @import 'custom-media.css'; */
+:root {
+  --color-white: white;
+  --color-red: red;
+  --color-header: gray;
+}
+:root {
+  --color-lavendar: #6C4D96;
+  --color-ship-cove: red;
+  --gradient-header: linear-gradient(
+    to bottom right,
+    var(--color-ship-cove), 
+    var(--color-lavendar)
+  );
+}
+.xGrid, .yGrid {
+  stroke-opacity: 0.2;
+}
+body, svg text {
+  font-family: 'Source Sans Pro', sans-serif;
+  margin: 0;
+}
+.app > div {
+  height: calc(100vh - 100px);
+}
+
+
+/*# sourceMappingURL=main.css.map*/
