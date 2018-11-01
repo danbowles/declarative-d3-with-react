@@ -82,13 +82,48 @@ export const XGrid = D3blackbox(function XGrid() {
     .call(axis);
 });
 
-export const Bars = D3blackbox(function Bars() {
+export const Line = D3blackbox(function Line() {
   const current = d3.select(this.anchor)
-    .selectAll('rect').data(this.props.plotData);
+    .selectAll('path')
+    .data([this.props.plotData]);
 
-  current.interrupt(); // .selectAll("*");
+  current.interrupt();
 
-  current.transition().attr('fill', 'green');
+  const path = d3.line()
+    .x(({ x }) => x)
+    .y(({ y }) => y)
+    .curve(d3.curveMonotoneX);
+
+  const pathData = path(this.props.plotData);
+
+  const enter = current.enter();
+  // enter.style('fill', 'none');
+
+  enter.append('path')
+    .attr('d', pathData)
+    .attr('fill', 'none')
+    .attr('stroke', 'blue');
+
+  // const exit = current.exit();
+
+  current
+    .merge(current)
+    .transition()
+    .duration(1000)
+    .attr('d', pathData);
+});
+
+export const Bars = D3blackbox(function Bars() {
+  // const parent = d3.select(this.anchor); // .datum(this.props.plotData);
+
+  const current = d3.select(this.anchor)
+    .selectAll('.bar').data(this.props.plotData);
+  // const current = d3.select(this.anchor)
+  //   .selectAll('rect').data(this.props.plotData);
+
+  current.interrupt();
+
+  // current.transition().attr('fill', 'green');
 
   const enter = current.enter().append('g').classed('bar', true);
   enter.attr('fill', 'blue');
@@ -111,7 +146,6 @@ export const Bars = D3blackbox(function Bars() {
     .select('rect')
     .attr('width', ({ width }) => width)
     .transition()
-    .duration(1000)
     .attr('transform', ({ x, y }) => `translate(${x}, ${y})`)
-    .attr('height', (dataItem) => dataItem.height);
+    .attr('height', ({ height }) => height);
 });

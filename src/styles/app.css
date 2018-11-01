@@ -10,5 +10,5 @@ body, svg text {
 }
 
 .app > div {
-  height: calc(100vh - 100px);
+  height: calc(50vh - 100px);
 }
