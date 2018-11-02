@@ -108,6 +108,18 @@ export const ScatterPlot = D3blackbox(function ScatterPlot() {
   current
     .merge(enter)
     .select('circle')
+    .on('mouseover', (dataItem, index, circles) => {
+      const circle = d3.select(circles[index]);
+      circle
+        .transition()
+        .attr('r', 8);
+    })
+    .on('mouseout', (dataItem, index, circles) => {
+      const circle = d3.select(circles[index]);
+      circle
+        .transition()
+        .attr('r', 5);
+    })
     .transition()
     .attr('cx', ({ x }) => x)
     .attr('cy', ({ y }) => y)
