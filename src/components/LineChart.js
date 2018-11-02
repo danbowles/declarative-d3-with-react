@@ -8,6 +8,7 @@ import {
   Line,
   XGrid,
   YGrid,
+  ScatterPlot,
 } from './D3RenderedComponents';
 
 class BarChart extends React.Component {
@@ -110,6 +111,7 @@ class BarChart extends React.Component {
             <YAxis {...metaData} />
           </g>
           <g className="plotLayer">
+            <ScatterPlot {...metaData} {...plotData} />
             <Line {...metaData} {...plotData} />
           </g>
         </g>
