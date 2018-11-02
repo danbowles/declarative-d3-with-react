@@ -88,7 +88,6 @@ export const ScatterPlot = D3blackbox(function ScatterPlot() {
   const current = d3.select(this.anchor)
     .selectAll('.dot')
     .data(this.props.plotData, ({ data }) => data.year);
-  console.log(this.props.plotData);
 
   const enter = current.enter().append('g').classed('dot', true);
 
