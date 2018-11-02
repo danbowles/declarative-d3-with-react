@@ -111,8 +111,8 @@ class BarChart extends React.Component {
             <YAxis {...metaData} />
           </g>
           <g className="plotLayer">
-            <ScatterPlot {...metaData} {...plotData} />
             <Line {...metaData} {...plotData} />
+            <ScatterPlot {...metaData} {...plotData} />
           </g>
         </g>
       </svg>

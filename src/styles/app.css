@@ -3,6 +3,7 @@
 @import 'colors.css';
 @import 'gradients.css';
 @import 'axis.css';
+@import 'dot.css';
 
 body, svg text {
   font-family: 'Source Sans Pro', sans-serif;
