@@ -18,6 +18,10 @@
 .xGrid, .yGrid {
   stroke-opacity: 0.2;
 }
+.dot circle {
+  stroke: white;
+  stroke-width: 3px;
+}
 body, svg text {
   font-family: 'Source Sans Pro', sans-serif;
   margin: 0;
