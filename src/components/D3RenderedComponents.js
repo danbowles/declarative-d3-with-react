@@ -1,34 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
 import * as d3 from 'd3';
+import { interpolatePath } from 'd3-interpolate-path';
+import D3Render from './d3/D3Render';
 
-export default function D3blackbox(d3Component) {
-  return class Blackbox extends React.Component {
-    static propTypes = {
-      transform: PropTypes.string.isRequired,
-    }
-
-    componentDidMount() {
-      d3Component.call(this);
-    }
-
-    componentDidUpdate() {
-      d3Component.call(this);
-    }
-
-    render() {
-      const { transform = '' } = this.props;
-      return (
-        <g
-          transform={transform}
-          ref={(gRef) => { this.anchor = gRef; }}
-        />
-      );
-    }
-  };
-}
-
-export const XAxis = D3blackbox(function XAxis() {
+export const XAxis = D3Render(function XAxis() {
   const axis = d3
     .axisBottom()
     .tickFormat((dataItem) => dataItem)
@@ -41,7 +15,7 @@ export const XAxis = D3blackbox(function XAxis() {
     .call(axis);
 });
 
-export const YAxis = D3blackbox(function YAxis() {
+export const YAxis = D3Render(function YAxis() {
   const axis = d3
     .axisLeft()
     .tickFormat((dataItem) => dataItem)
@@ -54,7 +28,7 @@ export const YAxis = D3blackbox(function YAxis() {
     .call(axis);
 });
 
-export const YGrid = D3blackbox(function YGrid() {
+export const YGrid = D3Render(function YGrid() {
   const axis = d3
     .axisRight()
     .tickFormat(() => null)
@@ -69,7 +43,7 @@ export const YGrid = D3blackbox(function YGrid() {
     .call(axis);
 });
 
-export const XGrid = D3blackbox(function XGrid() {
+export const XGrid = D3Render(function XGrid() {
   const axis = d3
     .axisBottom()
     .tickFormat(() => null)
@@ -84,7 +58,7 @@ export const XGrid = D3blackbox(function XGrid() {
     .call(axis);
 });
 
-export const ScatterPlot = D3blackbox(function ScatterPlot() {
+export const ScatterPlot = D3Render(function ScatterPlot() {
   const current = d3.select(this.anchor)
     .selectAll('.dot')
     .data(this.props.plotData, ({ data }) => data.year);
@@ -125,7 +99,7 @@ export const ScatterPlot = D3blackbox(function ScatterPlot() {
     .attr('r', 5);
 });
 
-export const Line = D3blackbox(function Line() {
+export const Line = D3Render(function Line() {
   const current = d3.select(this.anchor)
     .selectAll('path')
     .data([this.props.plotData]);
@@ -149,10 +123,14 @@ export const Line = D3blackbox(function Line() {
   current
     .merge(current)
     .transition()
-    .attr('d', pathData);
+    .attrTween('d', function attrTween(dataItem) {
+      const previous = d3.select(this).attr('d');
+      const newLine = path(dataItem);
+      return interpolatePath(previous, newLine);
+    });
 });
 
-export const Bars = D3blackbox(function Bars() {
+export const Bars = D3Render(function Bars() {
   const current = d3.select(this.anchor)
     .selectAll('.bar').data(this.props.plotData);
 
@@ -182,3 +160,43 @@ export const Bars = D3blackbox(function Bars() {
     .attr('transform', ({ x, y }) => `translate(${x}, ${y})`)
     .attr('height', ({ height }) => height);
 });
+
+export const Arcs = D3Render(function Arcs() {
+  const { plotData, arc } = this.props;
+  const color = d3.scaleOrdinal(d3.schemePastel1);
+  const pie = d3.pie()
+    .value(({ value }) => value)
+    .sort(null);
+
+  const current = d3.select(this.anchor).datum(plotData)
+    .selectAll('.arc')
+    .data(pie);
+
+  const enter = current.enter().append('g').classed('arc', true);
+
+  enter
+    .append('path')
+    .attr('fill', (dataItem, index) => color(index))
+    .attr('d', arc);
+
+  current.exit()
+    .transition()
+    .attrTween('d', function attrTween(dataItem) {
+      const previous = d3.select(this).attr('d');
+      const newLine = arc(dataItem);
+      return interpolatePath(previous, newLine);
+    })
+    .remove();
+
+  current
+    .merge(enter)
+    .select('path')
+    .transition()
+    .attr('fill', (dataItem, index) => color(index))
+    .attrTween('d', function attrTween(dataItem) {
+      const previous = d3.select(this).attr('d');
+      const newLine = arc(dataItem);
+      return interpolatePath(previous, newLine);
+    });
+});
+

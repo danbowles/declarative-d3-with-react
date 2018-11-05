@@ -1,7 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 import Responsive from './Responsive';
+import { BAR_CHART_PROPTYPES } from '../config/types';
 import {
   XAxis,
   YAxis,
@@ -11,20 +11,7 @@ import {
 } from './D3RenderedComponents';
 
 class BarChart extends React.Component {
-  static propTypes = {
-    width: PropTypes.number.isRequired,
-    height: PropTypes.number.isRequired,
-    margin: PropTypes.shape({
-      top: PropTypes.number,
-      left: PropTypes.number,
-      right: PropTypes.number,
-      bottom: PropTypes.number,
-    }).isRequired,
-    xFn: PropTypes.func.isRequired,
-    yFn: PropTypes.func.isRequired,
-    // TODO: bar chart data shape
-    data: PropTypes.shape({}).isRequired,
-  };
+  static propTypes = BAR_CHART_PROPTYPES;
 
   getScales() {
     const {

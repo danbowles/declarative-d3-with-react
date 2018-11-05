@@ -2,8 +2,9 @@ import React from 'react';
 import Header from './Header';
 import SvgTest from './SvgTest';
 import BarChart from './BarChart';
-import { barData, lineData } from '../services/chartData';
+import { barData, lineData, pieData } from '../services/chartData';
 import LineChart from './LineChart';
+import PieChart from './PieChart';
 
 const margin = {
   top: 60,
@@ -19,10 +20,12 @@ class App extends React.Component {
     this.state = {
       barChartData: barData(),
       lineChartData: lineData(),
+      pieChartData: pieData(),
     };
 
     this.onUpdateBarChartDataClick = this.onUpdateBarChartDataClick.bind(this);
-    this.onUpdateLineChartData = this.onUpdateLineChartData.bind(this);
+    this.onUpdateLineChartDataClick = this.onUpdateLineChartDataClick.bind(this); // eslint-disable-line max-len
+    this.onUpdatePieChartDataClick = this.onUpdatePieChartDataClick.bind(this);
   }
 
   onUpdateBarChartDataClick() {
@@ -31,19 +34,36 @@ class App extends React.Component {
     });
   }
 
-  onUpdateLineChartData() {
+  onUpdatePieChartDataClick() {
+    this.setState({
+      pieChartData: pieData(),
+    });
+  }
+
+  onUpdateLineChartDataClick() {
     this.setState({
       lineChartData: lineData(),
     });
   }
 
   render() {
-    const { barChartData, lineChartData } = this.state;
+    const { barChartData, lineChartData, pieChartData } = this.state;
     return (
       <div className="app">
         <Header title="My App Name is Neat!" />
         <button
-          onClick={this.onUpdateLineChartData}
+          onClick={this.onUpdatePieChartDataClick}
+          type="button"
+        >
+          Update Pie Data
+        </button>
+        <PieChart
+          data={pieChartData}
+          valueFn={({ value }) => value}
+          margin={margin}
+        />
+        <button
+          onClick={this.onUpdateLineChartDataClick}
           type="button"
         >
           Update Line Data
