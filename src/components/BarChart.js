@@ -3,9 +3,9 @@ import * as d3 from 'd3';
 import Responsive from './Responsive';
 import { BAR_CHART_PROPTYPES } from '../config/types';
 import {
+  Bars,
   XAxis,
   YAxis,
-  Bars,
   XGrid,
   YGrid,
 } from './D3RenderedComponents';

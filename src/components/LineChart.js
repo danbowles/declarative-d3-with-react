@@ -3,9 +3,9 @@ import * as d3 from 'd3';
 import Responsive from './Responsive';
 import { LINE_CHART_PROPTYPES } from '../config/types';
 import {
+  Line,
   XAxis,
   YAxis,
-  Line,
   XGrid,
   YGrid,
   ScatterPlot,
