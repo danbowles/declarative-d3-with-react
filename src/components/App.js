@@ -60,6 +60,7 @@ class App extends React.Component {
         <PieChart
           data={pieChartData}
           valueFn={({ value }) => value}
+          labelFn={({ data: { label } = {} } = {}) => label}
           margin={margin}
         />
         <button

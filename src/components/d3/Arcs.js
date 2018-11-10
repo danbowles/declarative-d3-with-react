@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
-// import { interpolatePath } from 'd3-interpolate-path';
 
 function colors(index) {
+  // TODO: config file
   const colorArray = [
     '#e53935',
     '#d81b60',
@@ -24,50 +24,95 @@ function colors(index) {
 }
 
 export default function D3Arcs() {
-  const { plotData, arc } = this.props;
+  const {
+    plotData,
+    arc,
+    valueFn,
+    labelFn,
+  } = this.props;
   const pie = d3.pie()
-    .value(({ value }) => value)
+    .value(valueFn)
     .sort(null);
 
-  const current = d3.select(this.anchor).datum(plotData)
-    .selectAll('.arc')
-    .data(pie);
+  const currentData = d3.select(this.anchor).selectAll('path').data();
+  const incomingData = pie(plotData);
 
-  const enter = current.enter().append('g').classed('arc', true);
+  const paths = d3.select(this.anchor).datum(plotData)
+    .selectAll('path')
+    .data(incomingData);
 
-  enter
+  paths
+    .exit()
+    .datum((dataItem, index) => findNeighborArc(
+      index,
+      incomingData,
+      currentData,
+      labelFn
+    ) || dataItem)
+    .transition()
+    .attrTween('d', tween)
+    .remove();
+
+  paths
+    .enter()
     .append('path')
     .attr('fill', (dataItem, index) => colors(index))
     .attr('d', arc)
-    .each((dataItem) => { this.currentPath = dataItem; });
-
-  current.exit()
-    .attr('opacity', 1)
-    .transition()
-    .attr('opacity', 0)
-    // .attrTween('d', arcTween)
-    // .attrTween('d', function attrTween(dataItem) {
-    //   const previous = d3.select(this).attr('d');
-    //   const newLine = arc(dataItem);
-    //   return interpolatePath(previous, newLine);
-    // })
-    .remove();
-
-  current
-    .merge(enter)
-    .select('path')
+    .each((dataItem, index) => {
+      this.currentData = findNeighborArc(
+        index,
+        incomingData,
+        currentData,
+        labelFn
+      );
+    })
+    .merge(paths)
     .transition()
     .attr('fill', (dataItem, index) => colors(index))
-    .attrTween('d', arcTween);
-  // .attrTween('d', function attrTween(dataItem) {
-  //   const previous = d3.select(this).attr('d');
-  //   const newLine = arc(dataItem);
-  //   return interpolatePath(previous, newLine);
-  // });
+    .attrTween('d', tween);
 
-  function arcTween(newPath) {
-    const interpolated = d3.interpolate(this.currentPath, newPath);
-    this.currentPath = interpolated(0);
-    return (arg) => arc(interpolated(arg));
+  function tween(arcData) {
+    const interpolate = d3.interpolate(this.currentData, arcData);
+    this.currentData = interpolate(0);
+    return (timeValue) => arc(interpolate(timeValue));
   }
+
+  function findNeighborArc(index, data0, data1, keyFn) {
+    let neighborArc;
+    const preceding = findPreceding(index, data0, data1, keyFn);
+    const following = findFollowing(index, data0, data1, keyFn);
+    if (preceding) {
+      const { endAngle } = preceding;
+      neighborArc = { startAngle: endAngle, endAngle };
+    } else if (following) {
+      const { startAngle } = following;
+      neighborArc = { startAngle, endAngle: startAngle };
+    }
+
+    return neighborArc || null;
+  }
+
+  /* eslint-disable */  
+  // Find the element in data0 that joins the highest preceding element in data1.
+  function findPreceding(i, data0, data1, key) {
+    var m = data0.length;
+    while (--i >= 0) {
+      var k = key(data1[i]);
+      for (var j = 0; j < m; ++j) {
+        if (key(data0[j]) === k) return data0[j];
+      }
+    }
+  }
+  
+  // Find the element in data0 that joins the lowest following element in data1.
+  function findFollowing(i, data0, data1, key) {
+    var n = data1.length, m = data0.length;
+    while (++i < n) {
+      var k = key(data1[i]);
+      for (var j = 0; j < m; ++j) {
+        if (key(data0[j]) === k) return data0[j];
+      }
+    }
+  }
+  /* eslint-enable */
 }

@@ -29,6 +29,8 @@ class BarChart extends React.Component {
       width,
       height,
       data,
+      labelFn,
+      valueFn,
     } = this.props;
     const { plotWidth, plotHeight } = this.getPlotDimentions();
 
@@ -36,12 +38,15 @@ class BarChart extends React.Component {
 
     const metaData = {
       radius,
-      arc: d3.arc().outerRadius(radius).innerRadius(0),
+      labelFn,
+      valueFn,
+      arc: d3.arc().outerRadius(radius * 0.8).innerRadius(0),
+      outerArc: d3.arc().outerRadius(radius).innerRadius(radius),
     };
 
     const plotData = {
-      plotData: data.map(({ value, year: label }, index) => ({
-        id: index,
+      plotData: data.map(({ value, label }) => ({
+        // id: index,
         value,
         label,
       })),
@@ -52,6 +57,7 @@ class BarChart extends React.Component {
         <g transform={`translate(${width / 2},${height / 2})`}>
           <g className="plotLayer">
             <Arcs {...metaData} {...plotData} />
+            {/* <ArcLabels {...metaData} {...plotData} /> */}
           </g>
         </g>
       </svg>

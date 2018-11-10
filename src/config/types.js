@@ -27,4 +27,6 @@ export const LINE_CHART_PROPTYPES = {
 
 export const PIE_CHART_PROPTYPES = {
   ...CHART_PROPTYPES,
+  valueFn: PropTypes.func.isRequired,
+  labelFn: PropTypes.func.isRequired,
 };

@@ -2,9 +2,10 @@ import * as d3 from 'd3';
 import { interpolatePath } from 'd3-interpolate-path';
 
 export default function D3Line() {
+  const { plotData } = this.props;
   const current = d3.select(this.anchor)
     .selectAll('path')
-    .data([this.props.plotData]);
+    .data([plotData]);
 
   current.interrupt();
 
@@ -13,7 +14,7 @@ export default function D3Line() {
     .y(({ y }) => y)
     .curve(d3.curveMonotoneX);
 
-  const pathData = path(this.props.plotData);
+  const pathData = path(plotData);
 
   const enter = current.enter();
 

@@ -7,6 +7,7 @@ import D3XGrid from './d3/XGrid';
 import D3YGrid from './d3/YGrid';
 import D3ScatterPlot from './d3/ScatterPlot';
 import D3Arcs from './d3/Arcs';
+import D3ArcLabels from './d3/ArcLabels';
 
 export const YAxis = D3Render(D3YAxis);
 export const XAxis = D3Render(D3XAxis);
@@ -20,3 +21,4 @@ export const Line = D3Render(D3Line);
 export const ScatterPlot = D3Render(D3ScatterPlot);
 
 export const Arcs = D3Render(D3Arcs);
+export const ArcLabels = D3Render(D3ArcLabels);
