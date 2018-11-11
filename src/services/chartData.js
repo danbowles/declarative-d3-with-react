@@ -1,13 +1,12 @@
 import * as d3 from 'd3';
 import { randomInt } from '../utils/utils';
 
-export const pieData = () => d3.range(2000, 2011)
-  .map((dataItem, index) => (0.5 <= Math.random() ? {
+export const pieData = () => d3.range(2000, 2005)
+  .map((dataItem, index) => ({
     id: index,
     label: dataItem,
-    value: randomInt(600),
-  } : {}))
-  // .filter(({ id }) => id)
+    value: randomInt(100),
+  }))
   .sort((dataA, dataB) => d3.ascending(dataA.label, dataB.label));
 
 export const lineData = () => d3.range(2000, 2005 + randomInt(10))

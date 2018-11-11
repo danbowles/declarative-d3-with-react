@@ -1,177 +1,80 @@
 import * as d3 from 'd3';
-import { mergeWithFirstEqualZero } from '../../utils/utils';
+// import { mergeWithFirstEqualZero } from '../../utils/utils';
 
 export default function D3ArcLabels() {
   const {
     plotData,
-    // arc,
     labelFn,
-    valueFn,
+    pie,
+    arc,
     outerArc,
+    radius,
   } = this.props;
-  const pie = d3.pie()
-    .value(valueFn)
-    .sort(null);
 
-  const existing = d3.select(this.anchor).datum(plotData)
-    .selectAll('.arc-label')
-    .data()
-    .map(({ data }) => data);
+  const incomingData = pie(plotData);
 
-  const dataCurrent = mergeWithFirstEqualZero(
-    plotData,
-    existing.length ? existing : plotData
-  );
+  const labels = d3.select(this.anchor).datum(plotData)
+    .selectAll('text')
+    .data(incomingData, labelFn);
 
-  const dataNew = mergeWithFirstEqualZero(
-    existing.length ? existing : plotData,
-    plotData
-  );
+  labels
+    .exit()
+    .remove();
 
-  console.log(dataCurrent);
-  console.log(dataNew);
-
-  const current = d3.select(this.anchor)
-    .selectAll('.arc-label')
-    .data(pie(dataCurrent), labelFn);
-
-  const enter = current.enter().append('g').classed('arc-label', true);
-
-  enter
+  labels
+    .enter()
     .append('text')
     .attr('dy', '0.35em')
     .text(labelFn)
-    .each((dataItem) => { this.currentPath = dataItem; });
-
-  enter
+    .merge(labels)
     .transition()
+    .duration(800)
     .attr(
       'transform',
-      (dataItem) => `translate(${outerArc.centroid(dataItem)})`
+      (dataItem) => {
+        const pos = outerArc.centroid(dataItem);
+        pos[0] = (radius * 1.1) * (midAngle(dataItem) < Math.PI ? 1 : - 1);
+        return `translate(${pos})`;
+      }
     );
 
-  current
-    .data(pie(dataNew), labelFn)
-    .transition()
-    .attr(
-      'transform',
-      (dataItem) => `translate(${outerArc.centroid(dataItem)})`
-    );
+  function midAngle({ startAngle, endAngle }) {
+    return startAngle + (endAngle - startAngle) / 2;
+  }
 
-  current.exit()
-    .attr('opacity', 1)
-    .transition()
-    .attr('opacity', 0)
+  function storeCurrent(dataItem) {
+    this.currentPath = dataItem;
+  }
+
+  const polylines = d3.select(this.anchor).datum(plotData)
+    .selectAll('polyline')
+    .data(incomingData, labelFn);
+
+  polylines
+    .exit()
     .remove();
 
-  // current
-  //   .data(pie(dataNew))
-  //   .merge(current)
-  //   .select('text')
-  //   .transition()
-  //   .attr(
-  //     'transform',
-  //     (dataItem) => `translate(${outerArc.centroid(dataItem)})`
-  //   );
-  // .attrTween('transform', attrTweenTransform);
-
-  // function attrTweenTransform(dataItem) {
-  //   const interpolate = d3.interpolate(this.currentPath, dataItem);
-  //   const current = this.currentPath;
-  // }
-  // var text = svg.select(".labels").selectAll("text")
-  //   .data(pie(was), key);
-
-  // text.enter()
-  //   .append("text")
-  //   .attr("dy", ".35em")
-  //   .style("opacity", 0)
-  //   .text(function(d) {
-  //     return d.data.label;
-  //   })
-  //   .each(function(d) {
-  //     this._current = d;
-  //   });
-
-  // function midAngle(d){
-  //   return d.startAngle + (d.endAngle - d.startAngle)/2;
-  // }
-
-  // text = svg.select(".labels").selectAll("text")
-  //   .data(pie(is), key);
-
-  // text.transition().duration(duration)
-  //   .style("opacity", function(d) {
-  //     return d.data.value == 0 ? 0 : 1;
-  //   })
-  //   .attrTween("transform", function(d) {
-  //     var interpolate = d3.interpolate(this._current, d);
-  //     var _this = this;
-  //     return function(t) {
-  //       var d2 = interpolate(t);
-  //       _this._current = d2;
-  //       var pos = outerArc.centroid(d2);
-  //       pos[0] = radius * (midAngle(d2) < Math.PI ? 1 : -1);
-  //       return "translate("+ pos +")";
-  //     };
-  //   })
-  //   .styleTween("text-anchor", function(d){
-  //     var interpolate = d3.interpolate(this._current, d);
-  //     return function(t) {
-  //       var d2 = interpolate(t);
-  //       return midAngle(d2) < Math.PI ? "start":"end";
-  //     };
-  //   });
-
-  // text = svg.select(".labels").selectAll("text")
-  //   .data(pie(data), key);
-
-  // text
-  //   .exit().transition().delay(duration)
-  //   .remove();
-  // const { plotData, arc } = this.props;
-  // const pie = d3.pie()
-  //   .value(({ value }) => value)
-  //   .sort(null);
-
-  // const current = d3.select(this.anchor).datum(plotData)
-  //   .selectAll('.arc')
-  //   .data(pie);
-
-  // const enter = current.enter().append('g').classed('arc', true);
-
-  // enter
-  //   .append('path')
-  //   .transition()
-  //   .attr('fill', (dataItem, index) => colors(index))
-  //   .attr('d', arcTween)
-  //   .each((dataItem) => { this.currentPath = dataItem; });
-
-  // current.exit()
-  //   .attr('opacity', 1)
-  //   .transition()
-  //   .attr('opacity', 0)
-  //   .remove();
-
-  // current
-  //   .merge(enter)
-  //   .select('path')
-  //   .transition()
-  //   .attr('fill', (dataItem, index) => colors(index))
-  //   .attrTween('d', arcTween);
-
-  // // TODO: to new file
-  // function arcTween(dataItem) {
-  //   const interpolated = d3.interpolate(this.currentPath || 0, dataItem);
-  //   this.currentPath = interpolated(0);
-  //   return (arg) => arc(interpolated(arg));
-  // }
-
-  // function arcTweenII(dataItem) {
-  //   const interpolated = d3.interpolate(
-  //     dataItem.startAngle + 0.1,
-  //     dataItem.endAngle
-  //   );
-  //   return (arg) => arc({ ...dataItem, endAngle: interpolated(arg) });
-  // }
+  polylines.enter()
+    .append('polyline')
+    .each(storeCurrent)
+    .attr('fill', 'none')
+    .attr('stroke', '#424242')
+    .merge(polylines)
+    .transition()
+    .duration(1000)
+    .attrTween('points', function attrTween(dataItem) {
+      const interpolate = d3.interpolate(this.currentPath, dataItem);
+      const self = this;
+      return (timeValue) => {
+        const interpolated = interpolate(timeValue);
+        self.current = interpolated;
+        const pos = outerArc.centroid(interpolated);
+        pos[0] = (radius) * (midAngle(interpolated) < Math.PI ? 1 : - 1);
+        return [
+          arc.centroid(interpolated),
+          outerArc.centroid(interpolated),
+          pos,
+        ];
+      };
+    });
 }

@@ -1,25 +1,26 @@
 import * as d3 from 'd3';
 
+const colorArray = [
+  '#e53935',
+  '#d81b60',
+  '#8e24aa',
+  '#5e35b1',
+  '#3949ab',
+  '#1e88e5',
+  '#039be5',
+  '#00acc1',
+  '#00897b',
+  '#43a047',
+  '#7cb342',
+  '#c0ca33',
+  '#fdd835',
+  '#ffb300',
+  '#fb8c00',
+  '#f4511e',
+].sort(() => (0.5 < Math.random() ? - 1 : 1));
+
 function colors(index) {
   // TODO: config file
-  const colorArray = [
-    '#e53935',
-    '#d81b60',
-    '#8e24aa',
-    '#5e35b1',
-    '#3949ab',
-    '#1e88e5',
-    '#039be5',
-    '#00acc1',
-    '#00897b',
-    '#43a047',
-    '#7cb342',
-    '#c0ca33',
-    '#fdd835',
-    '#ffb300',
-    '#fb8c00',
-    '#f4511e',
-  ];
   return colorArray[index % colorArray.length];
 }
 
@@ -27,12 +28,9 @@ export default function D3Arcs() {
   const {
     plotData,
     arc,
-    valueFn,
     labelFn,
+    pie,
   } = this.props;
-  const pie = d3.pie()
-    .value(valueFn)
-    .sort(null);
 
   const currentData = d3.select(this.anchor).selectAll('path').data();
   const incomingData = pie(plotData);
