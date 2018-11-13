@@ -9,7 +9,3 @@ body, svg text {
   font-family: 'Source Sans Pro', sans-serif;
   margin: 0;
 }
-
-.app > div {
-  height: calc(75vh - 100px);
-}

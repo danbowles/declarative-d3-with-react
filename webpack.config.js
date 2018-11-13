@@ -7,6 +7,14 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.(svg|png)$/,
+        use: [
+          {
+            loader: 'file-loader',
+          },
+        ],
+      },
+      {
         test: /\.js$/,
         exclude: /node_modules/,
         use: [
@@ -20,8 +28,8 @@ module.exports = {
           {
             loader: 'html-loader',
             options: { minimize: true }
-          }
-        ]
+          },
+        ],
       },
       {
         test: /\.css$/,

@@ -10,6 +10,7 @@ import {
   YGrid,
   ScatterPlot,
 } from './D3RenderedComponents';
+// import { COLORS } from '../config/constants';
 
 class BarChart extends React.Component {
   static propTypes = LINE_CHART_PROPTYPES;
