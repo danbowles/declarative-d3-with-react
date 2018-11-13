@@ -16,6 +16,19 @@ export const lineData = () => d3.range(2000, 2005 + randomInt(10))
     value: Math.random(),
   }));
 
+export const multiLineData = (numberOfSeries) => {
+  const yearMax = 2005 + randomInt(10);
+  return d3.range(0, numberOfSeries).reduce((acc) => {
+    acc.push(d3.range(2000, yearMax)
+      .map((dataItem, index) => ({
+        id: index,
+        year: dataItem,
+        value: Math.random(),
+      })));
+    return acc;
+  }, []);
+};
+
 export const barData = () => d3.range(2000, 2005 + randomInt(10))
   .map((dataItem, index) => ({
     id: index,

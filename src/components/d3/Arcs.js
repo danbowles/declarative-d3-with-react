@@ -1,35 +1,12 @@
 import * as d3 from 'd3';
 
-const colorArray = [
-  '#e53935',
-  '#d81b60',
-  '#8e24aa',
-  '#5e35b1',
-  '#3949ab',
-  '#1e88e5',
-  '#039be5',
-  '#00acc1',
-  '#00897b',
-  '#43a047',
-  '#7cb342',
-  '#c0ca33',
-  '#fdd835',
-  '#ffb300',
-  '#fb8c00',
-  '#f4511e',
-].sort(() => (0.5 < Math.random() ? - 1 : 1));
-
-function colors(index) {
-  // TODO: config file
-  return colorArray[index % colorArray.length];
-}
-
 export default function D3Arcs() {
   const {
     plotData,
     arc,
     labelFn,
     pie,
+    colorScale,
   } = this.props;
 
   const currentData = d3.select(this.anchor).selectAll('path').data();
@@ -54,7 +31,7 @@ export default function D3Arcs() {
   paths
     .enter()
     .append('path')
-    .attr('fill', (dataItem, index) => colors(index))
+    .attr('fill', (dataItem) => colorScale(labelFn(dataItem)))
     .attr('d', arc)
     .each((dataItem, index) => {
       this.currentData = findNeighborArc(
@@ -66,7 +43,7 @@ export default function D3Arcs() {
     })
     .merge(paths)
     .transition()
-    .attr('fill', (dataItem, index) => colors(index))
+    .attr('fill', (dataItem) => colorScale(labelFn(dataItem)))
     .attrTween('d', tween);
 
   function tween(arcData) {

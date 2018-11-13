@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import Responsive from './Responsive';
 import { PIE_CHART_PROPTYPES } from '../config/types';
 import { Arcs, ArcLabels } from './D3RenderedComponents';
+import { COLORS } from '../config/constants';
 
 class BarChart extends React.Component {
   static propTypes = PIE_CHART_PROPTYPES;
@@ -35,11 +36,15 @@ class BarChart extends React.Component {
     const { plotWidth, plotHeight } = this.getPlotDimentions();
 
     const radius = Math.min(plotWidth, plotHeight) / 2;
+    const colorScale = d3.scaleOrdinal(COLORS).domain(
+      data.map(({ label }) => label)
+    );
 
     const metaData = {
       radius,
       labelFn,
       valueFn,
+      colorScale,
       arc: d3.arc().outerRadius(radius * 0.8).innerRadius(0),
       outerArc: d3.arc().outerRadius(radius).innerRadius(radius),
       pie: d3.pie().value(valueFn).sort(null),

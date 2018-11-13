@@ -2,16 +2,15 @@ import React from 'react';
 import Header from './Header';
 import SvgTest from './SvgTest';
 import BarChart from './BarChart';
-import { barData, lineData, pieData } from '../services/chartData';
+import {
+  barData,
+  lineData,
+  // multiLineData,
+  pieData,
+} from '../services/chartData';
 import LineChart from './LineChart';
 import PieChart from './PieChart';
-
-const margin = {
-  top: 60,
-  left: 40,
-  bottom: 20,
-  right: 20,
-};
+import { CHART_MARGINS } from '../config/constants';
 
 class App extends React.Component {
   constructor(props) {
@@ -61,7 +60,7 @@ class App extends React.Component {
           data={pieChartData}
           valueFn={({ value }) => value}
           labelFn={({ data: { label } = {} } = {}) => label}
-          margin={margin}
+          margin={{ ...CHART_MARGINS, left: 100, right: 100 }}
         />
         <button
           onClick={this.onUpdateLineChartDataClick}
@@ -73,7 +72,7 @@ class App extends React.Component {
           data={lineChartData}
           xFn={({ year }) => year}
           yFn={({ value }) => value}
-          margin={margin}
+          margin={CHART_MARGINS}
         />
         <button
           onClick={this.onUpdateBarChartDataClick}
@@ -85,7 +84,7 @@ class App extends React.Component {
           data={barChartData}
           xFn={({ year }) => year}
           yFn={({ value }) => value}
-          margin={margin}
+          margin={CHART_MARGINS}
           paddingInner={0.1}
           paddingOuter={0.1}
         />

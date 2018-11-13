@@ -1,5 +1,4 @@
 import * as d3 from 'd3';
-// import { mergeWithFirstEqualZero } from '../../utils/utils';
 
 export default function D3ArcLabels() {
   const {
@@ -33,7 +32,7 @@ export default function D3ArcLabels() {
       'transform',
       (dataItem) => {
         const pos = outerArc.centroid(dataItem);
-        pos[0] = (radius * 1.1) * (midAngle(dataItem) < Math.PI ? 1 : - 1);
+        pos[0] = (radius * 1.1) * (midAngle(dataItem) < Math.PI ? 1 : (- 1.15));
         return `translate(${pos})`;
       }
     );
@@ -69,7 +68,7 @@ export default function D3ArcLabels() {
         const interpolated = interpolate(timeValue);
         self.current = interpolated;
         const pos = outerArc.centroid(interpolated);
-        pos[0] = (radius) * (midAngle(interpolated) < Math.PI ? 1 : - 1);
+        pos[0] = radius * (midAngle(interpolated) < Math.PI ? 1 : - 1);
         return [
           arc.centroid(interpolated),
           outerArc.centroid(interpolated),

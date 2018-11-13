@@ -18,4 +18,9 @@ export const COLORS = [
   '#F4511E',
 ];
 
-export const arcTween = () => {};
+export const CHART_MARGINS = {
+  top: 60,
+  left: 40,
+  bottom: 20,
+  right: 20,
+};
