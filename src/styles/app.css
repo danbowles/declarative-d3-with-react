@@ -6,6 +6,7 @@
 @import 'dot.css';
 
 body, svg text {
+  background: #fafafa;
   font-family: 'Source Sans Pro', sans-serif;
   margin: 0;
 }

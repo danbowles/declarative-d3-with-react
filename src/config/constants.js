@@ -21,6 +21,6 @@ export const COLORS = [
 export const CHART_MARGINS = {
   top: 60,
   left: 40,
-  bottom: 20,
+  bottom: 60,
   right: 20,
 };

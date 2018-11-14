@@ -26,23 +26,9 @@ const Header = () => {
     }
   `;
 
-  const ReactLogo = styled.div`
-    background-image: url(${reactLogo});
-    background-repeat: no-repeat;
-    background-size: contain;
-    margin: 0 0.75em;
-    height: 45px;
-    width: 45px;
-
-    ${media.smMax} {
-      height: 32px;
-      margin: 0 0.4em;
-      width: 32px;
-    }
-  `;
-
-  const D3Logo = styled.div`
-    background-image: url(${d3Logo});
+  const Logo = styled.div`
+    /* eslint-disable react/prop-types */
+    background-image: url(${({ logo }) => logo});
     background-repeat: no-repeat;
     background-size: contain;
     margin: 0 0.75em;
@@ -61,9 +47,9 @@ const Header = () => {
       <Title>
         Declarative Charts in
       </Title>
-      <ReactLogo />
+      <Logo logo={reactLogo} />
       <Title>and</Title>
-      <D3Logo />
+      <Logo logo={d3Logo} />
     </HeaderContainer>
   );
 };

@@ -13,15 +13,29 @@ import LineChart from './LineChart';
 import PieChart from './PieChart';
 import { CHART_MARGINS } from '../config/constants';
 
-const ChartHeading = styled.div`
-  display: flex;
-  height: auto;
-`;
-
 const ChartContainer = styled.div`
-  & > div {
+  background: white;
+  border-radius: 6px;
+  border: 1px solid #cfd8dc;
+  margin: 2em;
+  box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14);
+  & > div:last-child {
     height: calc(75vh - 100px);
   }
+`;
+
+const ChartHeading = styled.div`
+  align-items: center;
+  display: flex;
+`;
+
+const RefreshButton = styled.button`
+  background: #d32f2f;
+  color: white;
+  border-radius: 30px;
+  font-size: 1em;
+  margin: 1em;
+  padding: 13px 20px;
 `;
 
 class App extends React.Component {
@@ -62,16 +76,16 @@ class App extends React.Component {
     return (
       <div className="app">
         <Header title="My App Name is Neat!" />
-        <ChartHeading>
-          <button
-            onClick={this.onUpdatePieChartDataClick}
-            type="button"
-          >
-            Update Pie Data
-          </button>
-          <h2>Pie Chart</h2>
-        </ChartHeading>
         <ChartContainer>
+          <ChartHeading>
+            <RefreshButton
+              onClick={this.onUpdatePieChartDataClick}
+              type="button"
+            >
+              Update Pie Data
+            </RefreshButton>
+            <h2>Pie Chart</h2>
+          </ChartHeading>
           <PieChart
             data={pieChartData}
             valueFn={({ value }) => value}
@@ -79,16 +93,16 @@ class App extends React.Component {
             margin={{ ...CHART_MARGINS, left: 100, right: 100 }}
           />
         </ChartContainer>
-        <ChartHeading>
-          <button
-            onClick={this.onUpdateLineChartDataClick}
-            type="button"
-          >
-            Update Line Data
-          </button>
-          <h2>Line Chart</h2>
-        </ChartHeading>
         <ChartContainer>
+          <ChartHeading>
+            <RefreshButton
+              onClick={this.onUpdateLineChartDataClick}
+              type="button"
+            >
+              Update Line Data
+            </RefreshButton>
+            <h2>Line Chart</h2>
+          </ChartHeading>
           <LineChart
             data={lineChartData}
             xFn={({ year }) => year}
@@ -96,16 +110,16 @@ class App extends React.Component {
             margin={CHART_MARGINS}
           />
         </ChartContainer>
-        <ChartHeading>
-          <button
-            onClick={this.onUpdateBarChartDataClick}
-            type="button"
-          >
-            Update Bar Data
-          </button>
-          <h2>Bar Chart</h2>
-        </ChartHeading>
         <ChartContainer>
+          <ChartHeading>
+            <RefreshButton
+              onClick={this.onUpdateBarChartDataClick}
+              type="button"
+            >
+              Update Bar Data
+            </RefreshButton>
+            <h2>Bar Chart</h2>
+          </ChartHeading>
           <BarChart
             data={barChartData}
             xFn={({ year }) => year}
