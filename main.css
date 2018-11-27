@@ -16,7 +16,7 @@
   );
 }
 .xGrid, .yGrid {
-  stroke-opacity: 0.2;
+  stroke-opacity: 0.08;
 }
 .dot circle {
   stroke: white;
