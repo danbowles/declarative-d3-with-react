@@ -10,28 +10,31 @@ import {
   YGrid,
   ScatterPlot,
 } from './D3RenderedComponents';
-// import { COLORS } from '../config/constants';
+import { COLORS } from '../config/constants';
 
-class BarChart extends React.Component {
+const randomColors = [...COLORS].sort(() => (0.5 < Math.random() ? - 1 : 1));
+class LineChart extends React.Component {
   static propTypes = LINE_CHART_PROPTYPES;
 
   getScales() {
     const {
-      data,
       xFn,
       yFn,
+      data,
       width,
       height,
       margin: {
         left, right, top, bottom,
       },
     } = this.props;
+    const flatData = data
+      .reduce((acc, { data: dataItem }) => acc.concat(dataItem), []);
 
     const xScale = d3.scaleLinear();
     const yScale = d3.scaleLinear();
 
-    const xDomain = d3.extent(data.map(xFn));
-    const yDomain = d3.extent(data.map(yFn));
+    const xDomain = d3.extent(flatData.map(xFn));
+    const yDomain = d3.extent(flatData.map(yFn));
 
     xScale
       .domain(xDomain)
@@ -80,14 +83,9 @@ class BarChart extends React.Component {
       plotHeight,
     };
 
-    const plotData = {
-      plotData: data.map((dataItem, index) => ({
-        id: index,
-        data: dataItem,
-        x: xScale(xFn(dataItem)),
-        y: yScale(yFn(dataItem)),
-      })),
-    };
+    const colorScale = d3.scaleOrdinal(randomColors).domain(
+      data.map((x, index) => index)
+    );
 
     return (
       <svg width={width} height={height}>
@@ -98,14 +96,30 @@ class BarChart extends React.Component {
             <XAxis {...metaData} transform={`translate(0,${plotHeight})`} />
             <YAxis {...metaData} />
           </g>
-          <g className="plotLayer">
-            <Line {...plotData} />
-            <ScatterPlot {...plotData} />
-          </g>
+          {
+            data.map((dataSeries, dataIndex) => {
+              const plotData = {
+                fillColor: colorScale(dataIndex),
+                label: dataSeries.key,
+                plotData: dataSeries.data.map((dataItem, index) => ({
+                  id: index,
+                  data: dataItem,
+                  x: xScale(xFn(dataItem)),
+                  y: yScale(yFn(dataItem)),
+                })),
+              };
+              return (
+                <g className="plotLayer">
+                  <Line {...plotData} />
+                  <ScatterPlot {...plotData} />
+                </g>
+              );
+            })
+          }
         </g>
       </svg>
     );
   }
 }
 
-export default Responsive(BarChart);
+export default Responsive(LineChart);

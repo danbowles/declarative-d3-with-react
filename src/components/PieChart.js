@@ -5,6 +5,7 @@ import { PIE_CHART_PROPTYPES } from '../config/types';
 import { Arcs, ArcLabels } from './D3RenderedComponents';
 import { COLORS } from '../config/constants';
 
+const randomColors = [...COLORS].sort(() => (0.5 < Math.random() ? - 1 : 1));
 class BarChart extends React.Component {
   static propTypes = PIE_CHART_PROPTYPES;
 
@@ -36,7 +37,7 @@ class BarChart extends React.Component {
     const { plotWidth, plotHeight } = this.getPlotDimentions();
 
     const radius = Math.min(plotWidth, plotHeight) / 2;
-    const colorScale = d3.scaleOrdinal(COLORS).domain(
+    const colorScale = d3.scaleOrdinal(randomColors).domain(
       data.map(({ label }) => label)
     );
 

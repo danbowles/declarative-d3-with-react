@@ -1,14 +1,15 @@
 import * as d3 from 'd3';
 
 export default function D3ScatterPlot() {
+  const { plotData, fillColor } = this.props;
   const current = d3.select(this.anchor)
     .selectAll('.dot')
-    .data(this.props.plotData, ({ data }) => data.year);
+    .data(plotData, ({ data }) => data.year);
 
   const enter = current.enter().append('g').classed('dot', true);
 
   enter.append('circle')
-    .attr('fill', 'blue')
+    .attr('fill', fillColor)
     .attr('cx', ({ x }) => x)
     .attr('cy', ({ y }) => y)
     .attr('r', 5);

@@ -1,8 +1,9 @@
 import * as d3 from 'd3';
 
 export default function D3Bars() {
+  const { plotData, fillColor } = this.props;
   const current = d3.select(this.anchor)
-    .selectAll('.bar').data(this.props.plotData);
+    .selectAll('.bar').data(plotData);
 
   current.interrupt();
 
@@ -10,13 +11,12 @@ export default function D3Bars() {
 
   enter
     .append('rect')
-    .attr('fill', 'blue')
+    .attr('fill', fillColor)
     .attr('height', 0)
-    .attr('transform', ({ x }) => `translate(${x}, ${this.props.plotHeight})`);
+    .attr('transform', ({ transform }) => transform);
 
   const exit = current.exit().classed('bar', false);
   exit
-    .attr('fill', 'red')
     .attr('opacity', 1)
     .transition()
     .attr('opacity', 0)

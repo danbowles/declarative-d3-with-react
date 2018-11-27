@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 import Responsive from './Responsive';
 import { BAR_CHART_PROPTYPES } from '../config/types';
 import {
-  Bars,
+  BarStacks,
   XAxis,
   YAxis,
   XGrid,
@@ -13,14 +13,14 @@ import { COLORS } from '../config/constants';
 
 const randomColors = [...COLORS].sort(() => (0.5 < Math.random() ? - 1 : 1));
 
-class BarChart extends React.Component {
+class MultiBarChart extends React.Component {
   static propTypes = BAR_CHART_PROPTYPES;
 
   getScales() {
     const {
       data,
       xFn,
-      yFn,
+      // yFn,
       width,
       height,
       paddingInner,
@@ -32,11 +32,21 @@ class BarChart extends React.Component {
 
     const xScale = d3.scaleBand();
     const yScale = d3.scaleLinear().nice();
+    const keyScale = d3.scaleOrdinal()
+      .range(randomColors);
 
     const xDomain = data.map(xFn);
-    // const yDomain = d3.extent(data.map(yFn));
-    const yMax = d3.max(data, (dataItem) => yFn(dataItem));
-    const yDomain = [0, yMax + (yMax * 0.02)];
+    const yDomain = [0, d3.max(
+      data.reduce(
+        (acc, curr) => {
+          const total = Object.keys(curr).slice(1)
+            .reduce((acc1, curr1) => acc1 + curr[curr1], 0);
+          acc.push(total);
+          return acc;
+        }, []
+      )
+    )];
+    const keyDomain = Object.keys(data[0]).slice(1);
 
     xScale
       .domain(xDomain)
@@ -46,9 +56,11 @@ class BarChart extends React.Component {
 
     yScale
       .domain(yDomain)
-      .range([height - top - bottom, 0]);
+      .rangeRound([height - top - bottom, 0]);
 
-    return { xScale, yScale };
+    keyScale.domain(keyDomain);
+
+    return { xScale, yScale, keyScale };
   }
 
   getPlotDimentions() {
@@ -75,29 +87,33 @@ class BarChart extends React.Component {
       margin,
       data,
       xFn,
-      yFn,
+      // yFn,
     } = this.props;
-    const { xScale, yScale } = this.getScales();
+    const { xScale, yScale, keyScale } = this.getScales();
     const { plotWidth, plotHeight } = this.getPlotDimentions();
+
+    const stack = d3.stack().keys(Object.keys(data[0]).slice(1))(data);
 
     const metaData = {
       xScale,
       yScale,
+      keyScale,
       plotWidth,
       plotHeight,
+      xFn,
     };
 
     const plotData = {
-      fillColor: randomColors[0],
-      plotData: data.map((dataItem, index) => ({
-        id: index,
-        data: dataItem,
-        x: xScale(xFn(dataItem)),
-        y: yScale(yFn(dataItem)),
-        width: xScale.bandwidth(),
-        height: plotHeight - yScale(yFn(dataItem)),
-        transform: `translate(${xScale(xFn(dataItem))},${plotHeight})`,
-      })),
+      stack,
+      data,
+      // plotData: data.map((dataItem, index) => ({
+      //   id: index,
+      //   data: dataItem,
+      //   x: xScale(xFn(dataItem)),
+      //   y: yScale(yFn(dataItem)),
+      //   width: xScale.bandwidth(),
+      //   height: plotHeight - yScale(yFn(dataItem)),
+      // })),
     };
 
     return (
@@ -110,7 +126,7 @@ class BarChart extends React.Component {
             <YAxis {...metaData} />
           </g>
           <g className="plotLayer">
-            <Bars {...plotData} />
+            <BarStacks {...metaData} {...plotData} />
           </g>
         </g>
       </svg>
@@ -118,4 +134,4 @@ class BarChart extends React.Component {
   }
 }
 
-export default Responsive(BarChart);
+export default Responsive(MultiBarChart);

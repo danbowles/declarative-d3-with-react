@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 import { interpolatePath } from 'd3-interpolate-path';
 
 export default function D3Line() {
-  const { plotData } = this.props;
+  const { plotData, fillColor } = this.props;
   const current = d3.select(this.anchor)
     .selectAll('path')
     .data([plotData]);
@@ -21,7 +21,7 @@ export default function D3Line() {
   enter.append('path')
     .attr('d', pathData)
     .attr('fill', 'none')
-    .attr('stroke', 'blue');
+    .attr('stroke', fillColor);
 
   current
     .merge(current)
