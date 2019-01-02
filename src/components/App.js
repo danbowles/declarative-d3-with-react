@@ -9,6 +9,7 @@ import {
   pieData,
   multiBarData,
   horizontalBarData,
+  groupedHorizontalBarData,
 } from '../services/chartData';
 import LineChart from './LineChart';
 import PieChart from './PieChart';
@@ -53,6 +54,7 @@ class App extends React.Component {
       lineChartData: multiLineData(),
       pieChartData: pieData(),
       horizontalBarChartData: horizontalBarData,
+      groupedHorizontalBarChartData: groupedHorizontalBarData,
     };
 
     this.onUpdateBarChartDataClick = this.onUpdateBarChartDataClick.bind(this);
@@ -100,14 +102,43 @@ class App extends React.Component {
       pieChartData,
       multiBarChartData,
       horizontalBarChartData,
+      groupedHorizontalBarChartData,
     } = this.state;
 
     const horizontalGuideData = { ...horizontalBarChartData[0] };
     horizontalBarChartData.reverse();
 
+    const groupedHorizontalGuideData = {
+      ...groupedHorizontalBarChartData.groups[0][0],
+    };
+    groupedHorizontalBarChartData.groups.reverse();
+
     return (
       <div className="app">
         <Header />
+        <ChartContainer>
+          <ChartHeading>
+            <RefreshButton
+              onClick={this.onUpdateBarChartDataClick}
+              type="button"
+            >
+              Refresh
+            </RefreshButton>
+            <h2>Grouped Horizontal Bar Chart</h2>
+          </ChartHeading>
+          <HorizontalBarChart
+            data={groupedHorizontalBarChartData}
+            xFn={({ value }) => value}
+            yFn={({ label }) => label}
+            margin={{ ...CHART_MARGINS, left: 100, right: 100 }}
+            paddingInner={0.1}
+            paddingOuter={0.1}
+            guideData={groupedHorizontalGuideData}
+            guideTitle="National Data"
+            formatter={d3.format('.1%')}
+            grouped={!! groupedHorizontalBarData.groups}
+          />
+        </ChartContainer>
         <ChartContainer>
           <ChartHeading>
             <RefreshButton

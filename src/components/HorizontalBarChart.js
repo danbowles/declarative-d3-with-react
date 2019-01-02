@@ -12,6 +12,8 @@ import {
 } from './D3RenderedComponents';
 // import { COLORS } from '../config/constants';
 
+const groupPadding = 30;
+
 // const randomColors = [...COLORS].sort(() => (0.5 < Math.random() ? - 1 : 1));
 const threshold = d3.scaleThreshold()
   .domain([0.099, 0.149, 0.199, 0.249, 0.299, 0.349, 0.399])
@@ -32,13 +34,17 @@ class HorizontalBarchart extends React.Component {
       margin: {
         left, right, top, bottom,
       },
+      grouped,
     } = this.props;
+
+    const flatData = grouped
+      ? data.groups.reduce((acc, curr) => acc.concat(curr), []) : data;
 
     const xScale = d3.scaleLinear().nice();
     const yScale = d3.scaleBand();
 
-    const yDomain = data.map(yFn);
-    const xMax = d3.max(data, (dataItem) => xFn(dataItem));
+    const yDomain = flatData.map(yFn);
+    const xMax = d3.max(flatData, (dataItem) => xFn(dataItem));
     const xDomain = [0, xMax + (xMax * 0.02)];
 
     xScale
@@ -47,9 +53,16 @@ class HorizontalBarchart extends React.Component {
 
     yScale
       .domain(yDomain)
-      .range([height - top - bottom, 0])
+      .range([
+        height - top - bottom, 0])
       .paddingInner(paddingInner)
       .paddingOuter(paddingOuter);
+
+    if (grouped) {
+      const groupCount = data.groups.length - 1; // Minus 1 as we don't pad first group.
+
+      yScale.range([yScale.range()[0] - (groupPadding * groupCount), 0]);
+    }
 
     return { xScale, yScale };
   }
