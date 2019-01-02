@@ -22,6 +22,14 @@ const threshold = d3.scaleThreshold()
 class HorizontalBarchart extends React.Component {
   static propTypes = BAR_CHART_PROPTYPES;
 
+  getFlatData() {
+    const { grouped, data } = this.props;
+    const flatData = grouped
+      ? data.groups.reduce((acc, curr) => acc.concat(curr), []) : data;
+
+    return { flatData };
+  }
+
   getScales() {
     const {
       data,
@@ -37,8 +45,7 @@ class HorizontalBarchart extends React.Component {
       grouped,
     } = this.props;
 
-    const flatData = grouped
-      ? data.groups.reduce((acc, curr) => acc.concat(curr), []) : data;
+    const { flatData } = this.getFlatData();
 
     const xScale = d3.scaleLinear().nice();
     const yScale = d3.scaleBand();
