@@ -44,3 +44,13 @@ export const multiBarData = (numberOfKeys = 1) => d3
         ),
       }), {}),
   }));
+
+export const horizontalBarData = [
+  { label: 'Youth 2-19', value: 0.185 },
+  { label: 'Girls 2-5', value: 0.135 },
+  { label: 'Girls 6-11', value: 0.163 },
+  { label: 'Girls 12-19', value: 0.209 },
+  { label: 'Boys 2-5', value: 0.143 },
+  { label: 'Boys 6-11', value: 0.204 },
+  { label: 'Boys 12-19', value: 0.202 },
+];

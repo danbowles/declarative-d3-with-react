@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import * as d3 from 'd3';
 import Header from './Header';
 import BarChart from './BarChart';
 import {
@@ -7,11 +8,13 @@ import {
   multiLineData,
   pieData,
   multiBarData,
+  horizontalBarData,
 } from '../services/chartData';
 import LineChart from './LineChart';
 import PieChart from './PieChart';
 import MultiBarChart from './MultiBarChart';
 import { CHART_MARGINS } from '../config/constants';
+import HorizontalBarChart from './HorizontalBarChart';
 
 const ChartContainer = styled.div`
   background: white;
@@ -41,12 +44,15 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
+    horizontalBarData.reverse();
+
     this.state = {
       barChartData: barData(),
       multiBarChartData: multiBarData(4),
       multiLineChartData: multiLineData(3),
       lineChartData: multiLineData(),
       pieChartData: pieData(),
+      horizontalBarChartData: horizontalBarData,
     };
 
     this.onUpdateBarChartDataClick = this.onUpdateBarChartDataClick.bind(this);
@@ -93,10 +99,37 @@ class App extends React.Component {
       lineChartData,
       pieChartData,
       multiBarChartData,
+      horizontalBarChartData,
     } = this.state;
+
+    const horizontalGuideData = { ...horizontalBarChartData[0] };
+    horizontalBarChartData.reverse();
+
     return (
       <div className="app">
-        <Header title="My App Name is Neat!" />
+        <Header />
+        <ChartContainer>
+          <ChartHeading>
+            <RefreshButton
+              onClick={this.onUpdateBarChartDataClick}
+              type="button"
+            >
+              Refresh
+            </RefreshButton>
+            <h2>Horizontal Bar Chart</h2>
+          </ChartHeading>
+          <HorizontalBarChart
+            data={horizontalBarChartData}
+            xFn={({ value }) => value}
+            yFn={({ label }) => label}
+            margin={{ ...CHART_MARGINS, left: 100, right: 100 }}
+            paddingInner={0.1}
+            paddingOuter={0.1}
+            guideData={horizontalGuideData}
+            guideTitle="National Data"
+            formatter={d3.format('.1%')}
+          />
+        </ChartContainer>
         <ChartContainer>
           <ChartHeading>
             <RefreshButton
